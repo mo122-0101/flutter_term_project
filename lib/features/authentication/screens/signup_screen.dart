@@ -3,11 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-
-
 import '../../../core/constants.dart';
 import '../../../core/helper/helper.dart';
-
 
 import '../auth.dart';
 import '../image_picker/user_image_picker.dart';
@@ -20,6 +17,10 @@ class SignupScreen extends StatefulWidget {
 
   const SignupScreen({Key? key}) : super(key: key);
 
+  // File? get getUserImage {
+  //   return _userImage;
+  // }
+
   @override
   State<SignupScreen> createState() => _SignupScreenState();
 }
@@ -29,9 +30,11 @@ class _SignupScreenState extends State<SignupScreen> {
   String? _userFullName = '';
   late String _userEmail;
   late String _userPassword;
+  File? _userImage;
   var _isLoading = false;
-  File? _userImage;// hold the image that the user pick it up
-  var _submitWithImage = true;// to show red border if i try to signup without image
+  // hold the image that the user pick it up
+  var _submitWithImage =
+      true; // to show red border if i try to signup without image
 
   void submittingForm() async {
     if (_userImage == null) {
@@ -47,16 +50,17 @@ class _SignupScreenState extends State<SignupScreen> {
     FocusScope.of(context).unfocus();
     if (validation) {
       if (_userImage == null && _userFullName != null) {
-        Helper.showSnackBar(context, 'Please choose an image.', Colors.red.withOpacity(0.8));
-      }else {
+        Helper.showSnackBar(
+            context, 'Please choose an image.', Colors.red.withOpacity(0.8));
+      } else {
         setState(() {
           _isLoading = true;
           _submitWithImage = true;
         });
         _form.currentState!.save();
         try {
-          await Auth.signingUserInOrUp(
-              context, _userEmail.trim(), _userPassword.trim(), _userFullName!.trim(), _userImage);
+          await Auth.signingUserInOrUp(context, _userEmail.trim(),
+              _userPassword.trim(), _userFullName!.trim(), _userImage);
           setState(() {
             _isLoading = false;
           });
@@ -74,6 +78,10 @@ class _SignupScreenState extends State<SignupScreen> {
     _userImage = image;
   }
 
+  // File? get getUserImage {
+  //   return _userImage;
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,7 +95,8 @@ class _SignupScreenState extends State<SignupScreen> {
               height: 350,
               decoration: const BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage('assets/images/one.webp'), fit: BoxFit.cover)),
+                      image: AssetImage('assets/images/one.webp'),
+                      fit: BoxFit.cover)),
             ),
           ),
           Positioned(
@@ -99,7 +108,8 @@ class _SignupScreenState extends State<SignupScreen> {
                 },
                 child: const Text(
                   'Sign in',
-                  style: TextStyle(fontFamily: font, fontSize: 17, color: Colors.white),
+                  style: TextStyle(
+                      fontFamily: font, fontSize: 17, color: Colors.white),
                 )),
           ),
           Positioned(

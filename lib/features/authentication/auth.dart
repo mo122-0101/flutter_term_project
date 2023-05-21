@@ -7,11 +7,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import '../../core/constants.dart';
 import '../../core/helper/helper.dart';
 
-
-
-
 class Auth {
-  static Future<void> signingUserInOrUp(BuildContext context, String userEmail, String userPassword,
+  static Future<void> signingUserInOrUp(
+      BuildContext context, String userEmail, String userPassword,
       [String userFullName = '', File? userImage]) async {
     final auth = FirebaseAuth.instance;
     try {
@@ -21,13 +19,17 @@ class Auth {
           email: userEmail,
           password: userPassword,
         );
+        uid = credential.user!.uid;
       } else {
         // we are in signup mode
         final credential = await auth.createUserWithEmailAndPassword(
           email: userEmail,
           password: userPassword,
         );
-        final storageRef = FirebaseStorage.instance.ref().child('user_image').child('${credential.user!.uid}.jpg');
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('user_image')
+            .child('${credential.user!.uid}.jpg');
         late String url;
         try {
           await storageRef.putFile(userImage!);
@@ -36,13 +38,17 @@ class Auth {
           debugPrint(e.toString());
         }
 
-        await FirebaseFirestore.instance.collection('users').doc(credential.user!.uid).set({
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(credential.user!.uid)
+            .set({
           'username': userFullName,
           'email': userEmail,
           'imageurl': url,
         });
         // ignore: use_build_context_synchronously
-        Helper.showSnackBar(context, 'Success Registration.', lightPurple.withOpacity(0.8));
+        Helper.showSnackBar(
+            context, 'Success Registration.', lightPurple.withOpacity(0.8));
       }
     } on FirebaseAuthException catch (ex) {
       var message = 'An error occurred';
@@ -59,7 +65,8 @@ class Auth {
       rethrow;
     } catch (ex) {
       debugPrint(ex.toString());
-      Helper.showSnackBar(context, 'error exist. please try again later.', Colors.red[300]!);
+      Helper.showSnackBar(
+          context, 'error exist. please try again later.', Colors.red[300]!);
       rethrow;
     }
   }

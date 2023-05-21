@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -9,7 +8,7 @@ import './chart_bars.dart';
 class Chart extends StatelessWidget {
   final List<Transaction> transactions;
 
-  const Chart(this.transactions);
+  const Chart(this.transactions, {super.key});
 
   List<Map<String, dynamic>> get chartTransactionValues {
     return List.generate(7, (index) {

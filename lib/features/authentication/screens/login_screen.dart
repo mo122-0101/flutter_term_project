@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-
 import '../../../core/constants.dart';
 
+import '../../home/screen.dart';
 import '../auth.dart';
 import '../widgets/custom_elevated_button_widget.dart';
 import '../widgets/custom_text_form_field.dart';
@@ -20,26 +20,27 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   final _form = GlobalKey<FormState>();
   late String userEmail;
   late String userPassword;
   var _isLoading = false;
 
-  void submittingForm() async{
+  void submittingForm() async {
     final validation = _form.currentState!.validate();
     FocusScope.of(context).unfocus();
-    if(validation) {
+    if (validation) {
       setState(() {
         _isLoading = true;
       });
       _form.currentState!.save();
       try {
-        await Auth.signingUserInOrUp(context, userEmail.trim(), userPassword.trim());
+        await Auth.signingUserInOrUp(
+            context, userEmail.trim(), userPassword.trim());
         setState(() {
           _isLoading = false;
         });
-      }catch (ex) {
+        Navigator.of(context).pushReplacementNamed(MyHomePage.rn);
+      } catch (ex) {
         setState(() {
           _isLoading = false;
         });
@@ -61,17 +62,22 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 370,
               decoration: const BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage('assets/images/one.webp'), fit: BoxFit.cover)),
+                      image: AssetImage('assets/images/one.webp'),
+                      fit: BoxFit.cover)),
             ),
           ),
           Positioned(
             right: 20,
             top: 45,
             child: InkWell(
-                onTap: (){
+                onTap: () {
                   Navigator.of(context).pushReplacementNamed(SignupScreen.rn);
                 },
-                child: const Text('Sign up', style: TextStyle(fontFamily: font, fontSize: 17, color: Colors.white),)),
+                child: const Text(
+                  'Sign up',
+                  style: TextStyle(
+                      fontFamily: font, fontSize: 17, color: Colors.white),
+                )),
           ),
           Positioned(
             left: 0,
@@ -105,8 +111,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Column(
                         children: [
                           CustomTextFormField(
-                            onValidate: (value){
-                              if(value!.isEmpty || !value.contains('@')) {
+                            onValidate: (value) {
+                              if (value!.isEmpty || !value.contains('@')) {
                                 return 'please enter a valid email';
                               }
                               return null;
@@ -120,8 +126,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           const SizedBox(height: 15),
                           CustomTextFormField(
-                            onValidate: (value){
-                              if(value!.isEmpty || value.length < 6) {
+                            onValidate: (value) {
+                              if (value!.isEmpty || value.length < 6) {
                                 return 'please enter at least 6 characters';
                               }
                               return null;

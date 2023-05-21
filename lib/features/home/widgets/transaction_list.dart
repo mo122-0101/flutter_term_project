@@ -6,7 +6,7 @@ class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
   final Function deleteFunction;
 
-  const TransactionList(this.transactions, this.deleteFunction);
+  const TransactionList(this.transactions, this.deleteFunction, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class TransactionList extends StatelessWidget {
                 SizedBox(
                   height: constraints.maxHeight * .07,
                 ),
-                Container(
+                SizedBox(
                   height: constraints.maxHeight * 0.75,
                   child: Image.asset(
                     'assets/images/waiting.png',
@@ -36,7 +36,10 @@ class TransactionList extends StatelessWidget {
           })
         : ListView.builder(
             itemBuilder: (context, index) {
-              return TransactionItem( transaction: transactions[index], deleteTx: deleteFunction,);
+              return TransactionItem(
+                transaction: transactions[index],
+                deleteTx: deleteFunction,
+              );
             },
             itemCount: transactions.length,
           );

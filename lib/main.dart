@@ -7,9 +7,7 @@ import 'features/authentication/screens/signup_screen.dart';
 import 'features/authentication/screens/welcome_screen.dart';
 import 'features/home/screen.dart';
 
-
-
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -28,14 +26,12 @@ class FlutterChat extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Chat',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.purple
-      ),
+      theme: ThemeData(primarySwatch: Colors.purple),
       home: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          if(snapshot.hasData) {
-            return MyHomePage();
+          if (snapshot.hasData) {
+            return const MyHomePage();
           }
           return const WelcomeScreen();
         },
@@ -44,7 +40,7 @@ class FlutterChat extends StatelessWidget {
         WelcomeScreen.rn: (context) => const WelcomeScreen(),
         LoginScreen.rn: (context) => const LoginScreen(),
         SignupScreen.rn: (context) => const SignupScreen(),
-        MyHomePage.rn: (context) =>  MyHomePage(),
+        MyHomePage.rn: (context) => const MyHomePage(),
       },
     );
   }

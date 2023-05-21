@@ -1,5 +1,7 @@
-
+import 'package:cloud_firestore/cloud_firestore.dart' as ff;
 import 'package:flutter/material.dart';
+import 'package:flutter_chat/core/constants.dart';
+import 'package:flutter_chat/core/helper/helper.dart';
 import 'package:flutter_chat/features/home/widgets/chart.dart';
 import 'package:flutter_chat/features/home/widgets/new_transaction.dart';
 import 'package:flutter_chat/features/home/widgets/transaction_list.dart';
@@ -8,6 +10,8 @@ import 'models/transaction.dart';
 
 class MyHomePage extends StatefulWidget {
   static const rn = '/myHomePage';
+
+  const MyHomePage({super.key});
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -82,12 +86,12 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       _showChart
-          ? Container(
-          height: (mediaQuery.size.height -
-              appBar.preferredSize.height -
-              mediaQuery.padding.top) *
-              fraction,
-          child: Chart(_recentTransactions))
+          ? SizedBox(
+              height: (mediaQuery.size.height -
+                      appBar.preferredSize.height -
+                      mediaQuery.padding.top) *
+                  fraction,
+              child: Chart(_recentTransactions))
           : txListWidget,
     ];
   }
@@ -95,10 +99,10 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> _buildPortraitContent(MediaQueryData mediaQuery, AppBar appBar,
       double fraction, Widget txListWidget) {
     return [
-      Container(
+      SizedBox(
           height: (mediaQuery.size.height -
-              appBar.preferredSize.height -
-              mediaQuery.padding.top) *
+                  appBar.preferredSize.height -
+                  mediaQuery.padding.top) *
               fraction,
           child: Chart(_recentTransactions)),
       txListWidget
@@ -118,16 +122,60 @@ class _MyHomePageState extends State<MyHomePage> {
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
       actions: [
-        IconButton(
-            onPressed: () => startAddingNewTransaction(context),
-            icon: const Icon(Icons.add))
+        FutureBuilder(
+          future:
+              ff.FirebaseFirestore.instance.collection('users').doc(uid).get(),
+          builder: (_, snapshot) {
+            if (snapshot.hasError) {
+              return Helper.showSnackBar(
+                context,
+                snapshot.error.toString(),
+                Colors.red,
+              );
+            }
+
+            if (snapshot.hasData) {
+              var data = snapshot.data!.data();
+              var username = data!['username'];
+              var imageurl = data['imageurl'];
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Text(
+                      username,
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Container(
+                      width: 45,
+                      height: 45,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50)),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.network(
+                          imageurl,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+            return const Center(child: CircularProgressIndicator());
+          },
+        ),
       ],
     );
 
-    final txListWidget = Container(
+    final txListWidget = SizedBox(
         height: (mediaQuery.size.height -
-            appBar.preferredSize.height -
-            mediaQuery.padding.top) *
+                appBar.preferredSize.height -
+                mediaQuery.padding.top) *
             0.7,
         child: TransactionList(_userTransactions, _removeTransaction));
 
@@ -147,7 +195,10 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       //floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat, to add it in center
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add, color: Colors.white,),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
         onPressed: () => startAddingNewTransaction(context),
       ),
     );

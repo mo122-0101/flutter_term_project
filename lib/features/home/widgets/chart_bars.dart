@@ -6,23 +6,25 @@ class ChartBars extends StatelessWidget {
   final double spendingPctOfTotal; // it's a value from 0 to 1
 
   const ChartBars(
-      {required this.label,
+      {super.key,
+      required this.label,
       required this.spendingAmmount,
       required this.spendingPctOfTotal});
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
         return Column(
           children: [
-            Container(
+            SizedBox(
                 height: constraints.maxHeight * 0.15,
                 child: FittedBox(
                     child: Text('\$${spendingAmmount.toStringAsFixed(0)}'))),
             SizedBox(
               height: constraints.maxHeight * 0.05,
             ),
-            Container(
+            SizedBox(
               height: constraints.maxHeight * 0.6,
               width: 8,
               child: Stack(
@@ -52,10 +54,10 @@ class ChartBars extends StatelessWidget {
             SizedBox(
               height: constraints.maxHeight * 0.05,
             ),
-            Container(height: constraints.maxHeight * 0.15,child: Text(label)),
+            SizedBox(height: constraints.maxHeight * 0.15, child: Text(label)),
           ],
         );
-    },);
-
+      },
+    );
   }
 }

@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
-
-
 import '../../../core/constants.dart';
-import '../screens/signup_screen.dart';
 
 class CustomOutlineButtonWidget extends StatelessWidget {
   final String text;
   final VoidCallback onPress;
 
-  const CustomOutlineButtonWidget({Key? key,required this.onPress, required this.text})
+  const CustomOutlineButtonWidget(
+      {Key? key, required this.onPress, required this.text})
       : super(key: key);
 
   @override
@@ -26,7 +24,10 @@ class CustomOutlineButtonWidget extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-            fontFamily: font, color: midPurple, fontSize: 19, fontWeight: FontWeight.w500),
+            fontFamily: font,
+            color: midPurple,
+            fontSize: 19,
+            fontWeight: FontWeight.w500),
       ),
     );
   }

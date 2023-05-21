@@ -3,26 +3,26 @@ import 'package:intl/intl.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function helperFunction;
-  NewTransaction(this.helperFunction);
+  const NewTransaction(this.helperFunction, {super.key});
 
   @override
   State<NewTransaction> createState() => _NewTransactionState();
-
 }
 
 class _NewTransactionState extends State<NewTransaction> {
-
   final userTitleController = TextEditingController();
   final userPriceController = TextEditingController();
   var _userChosenDate;
 
   void _submitedData() {
-    if(userPriceController.text.isEmpty) return;
+    if (userPriceController.text.isEmpty) return;
     final inputTitle = userTitleController.text;
     final inputPrice = double.parse(userPriceController.text);
 
     // this is a small validation to make sure the user 'll never submit empty values
-    if (inputTitle.isEmpty || inputPrice <= 0 || _userChosenDate == null) return;
+    if (inputTitle.isEmpty || inputPrice <= 0 || _userChosenDate == null) {
+      return;
+    }
     // widget here help me to access the properties and methods inside NewTransaction widget class
     widget.helperFunction(inputTitle, inputPrice, _userChosenDate);
     Navigator.of(context).pop();
@@ -30,18 +30,18 @@ class _NewTransactionState extends State<NewTransaction> {
 
   void _displayDatePicker() {
     showDatePicker(
-          context: context,
-          initialDate: DateTime.now(),
-          firstDate: DateTime(2022),
-          lastDate: DateTime.now())
-      .then((chosenDate) {
-          if (chosenDate == null) {
-            return;
-          }
-          setState(() {
-            _userChosenDate = chosenDate;
-          });
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2022),
+            lastDate: DateTime.now())
+        .then((chosenDate) {
+      if (chosenDate == null) {
+        return;
+      }
+      setState(() {
+        _userChosenDate = chosenDate;
       });
+    });
   }
 
   @override
@@ -51,7 +51,11 @@ class _NewTransactionState extends State<NewTransaction> {
           elevation: 5,
           child: Container(
             //MediaQuery.of(context).viewInsets.bottom => tell me how much space my softTypeKey occupies from bottom
-            padding: EdgeInsets.only(top: 10, right: 10, left: 10, bottom: MediaQuery.of(context).viewInsets.bottom + 10),
+            padding: EdgeInsets.only(
+                top: 10,
+                right: 10,
+                left: 10,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
@@ -68,7 +72,7 @@ class _NewTransactionState extends State<NewTransaction> {
                   onSubmitted: (_) => _submitedData(),
                   keyboardType: TextInputType.number,
                 ),
-                Container(
+                SizedBox(
                   height: 70,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -88,11 +92,12 @@ class _NewTransactionState extends State<NewTransaction> {
                   ),
                 ),
                 ElevatedButton(
-                    onPressed: _submitedData,
-                    child: const Text(
-                      'Add Transaction',
-                      style: TextStyle(fontSize: 14),
-                    ),)
+                  onPressed: _submitedData,
+                  child: const Text(
+                    'Add Transaction',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                )
               ],
             ),
           )),
